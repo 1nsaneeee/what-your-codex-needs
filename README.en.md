@@ -1,107 +1,153 @@
-![What Your Codex Needs — an Enter keycap and an AGENTS.md](./assets/cover.png)
+<div align="center">
 
-# What Your Codex Needs
+<h1>What Your Codex Needs</h1>
 
-[中文版 (README.md)](./README.md)　·　[中文 AGENTS.md](./AGENTS.md)
+<p><strong>A two-layer Codex configuration for clear, reliable engineering collaboration</strong><br>
+<sub>Natural prose · Proportionate tests · Zero CYA disclaimers · Clear autonomy boundaries</sub></p>
 
-I want Codex to work like a reliable engineering colleague: fix a typo on a save button directly and verify it; check callers and propose a migration plan before changing a public API; stop spinning after repeated failures and hand me the most useful log line; and in everyday questions, lead with a clear judgment and the reason behind it — no fluff, no telegraphic fragments, no defensive disclaimers.
+<p>
+  <a href="./AGENTS.en.md"><img src="https://img.shields.io/badge/Layer_1-AGENTS.en.md-2da44e?style=flat-square" alt="Layer 1: AGENTS.en.md"></a>
+  <a href="./base_instructions.v2.md"><img src="https://img.shields.io/badge/Layer_2-base__instructions.v2-0969da?style=flat-square" alt="Layer 2: base_instructions.v2"></a>
+  <img src="https://img.shields.io/badge/Tested-codex--cli_0.172.0-57606a?style=flat-square" alt="Tested on codex-cli 0.172.0">
+  <a href="./README.md"><img src="https://img.shields.io/badge/Lang-%E4%B8%AD%E6%96%87-8250df?style=flat-square" alt="Chinese README"></a>
+</p>
 
-This repo provides a **two-layer Codex setup**: a practical collaboration guide ([AGENTS.en.md](./AGENTS.en.md) / [AGENTS.md](./AGENTS.md)) for day-to-day work, paired with an optional rewritten base system prompt ([base_instructions.v2.md](./base_instructions.v2.md)) that fixes structural defects in the default prompt.
+<p>
+  <a href="./AGENTS.en.md"><kbd>Collaboration AGENTS.en.md</kbd></a>&nbsp;
+  <a href="./base_instructions.v2.md"><kbd>Base Prompt v2 (EN)</kbd></a>&nbsp;
+  <a href="./base_instructions.v2.zh.md"><kbd>Base Prompt v2 (ZH)</kbd></a>&nbsp;
+  <a href="#how-to-use"><kbd>Quick Start</kbd></a>&nbsp;
+  <a href="./README.md"><kbd>中文</kbd></a>
+</p>
 
-**[AGENTS.en.md](./AGENTS.en.md)**　·　**[base_instructions.v2.md](./base_instructions.v2.md)**　·　[Chinese Reference](./base_instructions.v2.zh.md)　·　[Quick Start](#how-to-use)
+</div>
+
+---
+
+I want Codex to work like a sharp engineering colleague: fix a typo on a Save button directly and verify it; audit callers and propose one migration plan before changing a public API; switch strategies on repeated failures and stop with the key log line when genuinely stuck; and lead with clear judgment in everyday discussion.
 
 ## Two Layers, Clear Separation
 
-| Layer | File | What it handles | Recommendation |
-| :--- | :--- | :--- | :--- |
-| **Collaboration Layer** | [AGENTS.en.md](./AGENTS.en.md) ([中文](./AGENTS.md)) | Communication habits, Dual-Plan workflow, 2-failure circuit breakers, Git and verification discipline | **Recommended for everyone** — touches no internal tool protocols and never breaks across Codex upgrades |
-| **Base Prompt Layer** | [base_instructions.v2.md](./base_instructions.v2.md) ([中文](./base_instructions.v2.zh.md)) | Fixes writing-style blacklists, default test-skipping, defensive disclosures, and missing safety/stop-loss rails in the stock prompt | **Advanced / optional** — replaces the built-in base prompt via `model_instructions_file` |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3><kbd>Layer 1</kbd> Collaboration · <code>AGENTS.en.md</code></h3>
+      <p><sub>Recommended for everyone · Version-safe · Zero protocol lock-in</sub></p>
+      <ul>
+        <li><strong>Communication</strong>: lead with judgment, separate facts from assumptions, cut filler</li>
+        <li><strong>Workflow</strong>: <strong>Dual-Plan</strong> for new features, direct execution for small fixes</li>
+        <li><strong>Circuit breakers</strong>: switch after 2 failures, stop and report after 2 failed alternatives</li>
+        <li><strong>Engineering rails</strong>: inspect call sites first, no unrequested commits/pushes</li>
+      </ul>
+      <p>→ <a href="./AGENTS.en.md"><strong>Read AGENTS.en.md</strong></a> (<a href="./AGENTS.md">中文版</a>)</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3><kbd>Layer 2</kbd> Base Prompt · <code>base_instructions.v2</code></h3>
+      <p><sub>Advanced / optional · Replaces stock system prompt · All tool contracts intact</sub></p>
+      <ul>
+        <li><strong>Fix telegraph prose</strong>: drop punctuation &amp; contrast blacklists for natural writing</li>
+        <li><strong>Fix test laziness</strong>: flip default test-skipping into proportionate verification</li>
+        <li><strong>Drop CYA caveats</strong>: replace blanket <code>MUST</code> self-blame with 3 checkable disclosures</li>
+        <li><strong>Close safety rails</strong>: forbid weakening auth/TLS to pass tests; add countable stop-loss</li>
+      </ul>
+      <p>→ <a href="./base_instructions.v2.md"><strong>English Production</strong></a> · <a href="./base_instructions.v2.zh.md">Chinese Reference</a></p>
+    </td>
+  </tr>
+</table>
 
-You can use either layer independently or stack both. When both are active and thresholds differ (for example, `AGENTS.en.md` forbids unrequested commits/pushes and stops after 2 strategy switches, whereas the generic base layer allows draft PRs when requested and stops after 3 distinct hypotheses), your `AGENTS.en.md` and direct current instruction take precedence.
+```mermaid
+flowchart LR
+    A["System & Platform Safety"] --> B["Your Current Instruction"]
+    B --> C["Collaboration AGENTS.md"]
+    C --> D["Base Prompt base_instructions.v2"]
+```
 
-## Collaboration Layer (`AGENTS.en.md`): Three Prompts, Three Behaviors
+> [!TIP]
+> **Not sure where to start? Begin with `AGENTS.en.md` alone.**
+> It solves most day-to-day collaboration friction without touching internal tool signatures. When both layers are active, stricter thresholds in your `AGENTS.md` and direct current instruction automatically take precedence.
 
-| What I say | What I expect Codex to do |
-| :--- | :--- |
-| **"Fix the typo on the Save button."** | Find the real UI string in use, update it, and verify the result. Leave any nearby refactoring for another task. |
-| **"Rename `name` to `displayName` on the API."** | Audit every caller reading `name`, propose one preferred migration plan with impact and risks, and wait for my go-ahead. |
-| **"Why is this still throwing the same error?"** | Switch strategy after two failures on the same approach. If the second alternative still fails, stop editing and show what you tried, where it is stuck, and the key error. |
+---
 
-For new products or features with real behavioral trade-offs, use the **Dual-Plan Workflow**: align on *what* to build first (Product Plan), then align on *how* to build and verify it (Implementation Plan). Small fixes skip both rounds. [Read Dual-Plan rules](./AGENTS.en.md#dual-plan-workflow)
+## Collaboration Layer: Three Prompts, Three Behaviors
 
-## Base Layer (`base_instructions.v2`): Why Rewrite the System Prompt
+| What you say | What you expect Codex to do | Rule |
+| :--- | :--- | :--- |
+| **"Fix the typo on the Save button."** | Locate the real UI string, update it, and verify the result. Leave nearby refactoring for another task. | <kbd>Minimal Diff</kbd> |
+| **"Rename `name` to `displayName` on the API."** | Check every caller reading `name`, propose **one preferred migration plan** with impact and risks, and wait for approval. | <kbd>Confirm High-Risk</kbd> |
+| **"Why is this still throwing the same error?"** | Switch strategy after 2 failures; if the 2nd alternative still fails, stop editing and hand over what was tried, where it is stuck, and the key error. | <kbd>Circuit Breaker</kbd> |
 
-Most habits can be governed by `AGENTS.en.md` alone, but the stock `base_instructions` contains several patched-on conflicts that an outer file cannot always override. `v2` rewrites those behavioral instructions from scratch while preserving every Codex runtime contract.
+For new products or features with unresolved behavioral trade-offs, use the **Dual-Plan Workflow**: align on *what* to build first (Product Plan), then align on *how* to build and verify it (Implementation Plan); routine fixes skip both rounds. [Read Dual-Plan rules →](./AGENTS.en.md#dual-plan-workflow)
 
-> For copyright and maintenance reasons, this repo does not host OpenAI's raw system prompt verbatim. Only short representative excerpts are cited below to explain what `v2` fixes.
+---
 
-### 1. Remove punctuation and contrast blacklists that produce choppy "telegraph prose"
+## Base Prompt Layer: Stock Prompt Pain Points vs. `v2`
 
-The stock prompt piles on syntactic bans:
+Some habits live inside the stock `base_instructions` and are hard to suppress from `AGENTS.md` alone. Here is what `v2` replaces at a glance:
 
-> *"NEVER use contrastive framing such as 'X, not Y' ... Never add what you won't do, state what something is not, what will remain unchanged..."*
-> *"In prose, do not use semicolons. Do not use colons to introduce explanations or examples, including after list labels."*
+```diff
+# 1. Writing style: remove punctuation & contrast blacklists that cause choppy fragments
+- In prose, do not use semicolons or colons; NEVER use contrastive framing ("X, not Y").
+- Never state what something is not or what will remain unchanged.
++ Use colons, semicolons, transitions, and brief contrasts whenever they clarify causality or scope.
++ Cut only filler, self-praise, invented jargon, and unsolicited advice.
 
-In practice, this triggers pink-elephant fixation and mangled syntax: to dodge colons, semicolons, and contrasts, the model chops causal reasoning into abrupt fragments — and even silently drops critical negative boundaries when rewriting text (such as dropping *"not as a continuation of intermediate commentary"* and *"rather than replacing it"*). Meanwhile, the stock prompt itself uses colons after list labels in its own Plugins section (`Skill naming:`), causing inconsistent compliance.
+# 2. Verification & tests: reverse the default "skip new tests" laziness loop
+- Skip new tests unless requested, required by the repo, or catching a missed regression.
++ Use declared repo check entry points (README/scripts/Makefile/CI) and verify baseline attribution.
++ Add focused tests for bug fixes, non-trivial logic changes, and regression risks; skip only for trivial/covered/opt-out cases.
 
-**How `v2` fixes it**: Drops all punctuation, transition, and contrast blacklists in favor of positive colleague-grade prose principles — lead with the point, use colons/semicolons/transitions/brief contrasts whenever they clarify causality or scope boundaries, and cut only filler, self-praise, and unsolicited advice.
+# 3. Disclosures, security & stop-loss: remove defensive caveats, add hard rails
+- Mention any flaws or unguided decisions; you MUST repeat any such disclosures in final.
+- Only forbids hypothetical-risk warnings (no rule against weakening auth/TLS to make tests pass).
++ Disclose only 3 checkable items when present: behavioral assumptions, unverified areas, unresolved risks.
++ Never disable auth, validation, TLS, or sandboxes to make code pass (explicit local/test mocks excepted).
++ Switch hypothesis after 2 failures; pause and report after 3 distinct hypotheses fail without progress.
+```
 
-### 2. Reverse the default "skip new tests" laziness loop
-
-While asking for thorough verification up top, the stock coding guidelines default to skipping tests in clause `(c)`:
-
-> *"Skip new tests unless requested, required by the repo, or needed to catch a specific regression existing tests would miss."*
-
-Combined with "avoid unrequested artifacts", this encourages minimal-effort handoffs whenever the user does not explicitly ask for tests.
-
-**How `v2` fixes it**: Splits verification into two clean rules — (1) discover and use the repo's declared check entry points (README, scripts, Makefile, CI), check baseline status, and attribute failures accurately; (2) verify through real entry points and add focused tests for bug fixes, non-trivial logic changes, and regression risks, skipping new tests only for trivial edits, already-covered behavior, repos lacking a test harness where adding one is out of scope, or explicit user opt-out.
-
-### 3. Eliminate defensive disclaimers and close security / stop-loss gaps
-
-The stock prompt forbids preemptive disclaimers in one section yet mandates self-disclosure with `MUST` in another:
-
-> *"mention any relevant flaws in your work or any decisions you made without explicit guidance ... You MUST repeat any such disclosures in the final answer."*
-
-It also includes a one-sided "skip hypothetical-risk warnings" rule without a counterpart forbidding the model from disabling auth/validation/TLS to make tests pass, lacks a countable stop-loss threshold on blockers, and leaves no fallback if async question tools are unavailable.
-
-**How `v2` fixes it**:
-
-- **Concrete, non-defensive `final` disclosure**: List only three checkable items when present — unguided assumptions affecting behavior/interfaces/scope, unverified areas, and unresolved limitations — and never pad verified work with defensive caveats.
-- **Two-sided security rails**: Splits "skip hypothetical-risk friction" and "guard real security and data integrity" into separate rules, explicitly forbidding disabling authentication, weakening validation/TLS, or bypassing sandboxes to make code run (allowing controlled local/test exceptions like mock auth or self-signed certs only when explicitly required by the task), and adds destructive Git/data confirmation boundaries.
-- **Countable stop-loss and question fallback**: Switch diagnostic direction after 2 failures on the same hypothesis and pause with a structured report after 3 distinct hypotheses fail without meaningful progress; if async question tools are unavailable and user input is required, list concise pending questions with recommendations in `final`.
+> [!NOTE]
+> **Citation scope**: For copyright and maintenance reasons, this repo does not host OpenAI's raw system prompt verbatim. Only distilled mechanisms behind the three core defects are referenced above (in testing, the stock contrast ban even caused Codex to silently drop *"not as a continuation of intermediate commentary"* and *"rather than replacing it"* when translating its own rules, while the stock prompt itself used colons after list labels in its own Plugins section).
 
 <details>
-<summary>Expand: Preserved Codex runtime contracts and base-layer scoping principles</summary>
+<summary><strong>Expand: Preserved Codex runtime contracts and base-layer scoping rules</strong></summary>
 
-**Base-layer scoping rule**: Keep only principles that hold across every repository; leave project-specific or personal workflow details to `AGENTS.md` and on-demand `SKILL.md` files. Also fixes two typos from the stock prompt (`maketo`, `tools_search`) and trims ~20% redundant repetition.
+<br>
 
-**Preserved platform and tool contracts**:
+**Scoping rule**: Keep only principles that hold across every repository in the base layer; leave project-specific or personal workflow details to `AGENTS.md` and on-demand `SKILL.md` files. Also fixes two typos from the stock prompt (`maketo`, `tools_search`) and trims ~20% redundant repetition.
 
-- **Channels & collaboration**: `commentary` / `final` roles, opening with `commentary` before tool calls, self-contained `final` answers; `functions.request_user_input_async` / `functions.send_message_to_user_async`, waiting windows, mid-task steering, and context-compaction continuity.
-- **Formatting & visualizations**: GitHub-flavored Markdown, CommonMark blank-line spacing, clickable local file links (angle brackets for spaces, no backticks or URIs, no line ranges), and four-tier visualization selection (interactive/inline, standalone plotting artifacts, Mermaid, tables/lists).
-- **Tools & shell**: `rg` / `rg --files`, batched read-only `functions.exec` with `await Promise.allSettled([...])`, no decorative shell separators, `JSON.stringify()` non-shell-escaping warning, `gh --body-file` newline/escape fidelity, 60-second blocking wait/poll cap, and never overwriting `$HOME`/`$home`/`$CODEX_HOME`.
-- **Extensions & frontend**: Skills (`r0` alias expansion, environment-owned and orchestrator `skills.list` / `skills.read` / `skill://`), Apps (`codex_apps` / `tool_search` / never calling `list_mcp_resources*`), Plugins (`plugin_name:` and MCP `provenance`), plus frontend visuals, copy restraint, interactive states/accessibility, and the complete 65-font catalog.
+| Contract Area | Preserved in `v2` |
+| :--- | :--- |
+| **Channels & Steering** | `commentary` / `final` roles, opening with `commentary` before tool calls, self-contained `final` answers; `functions.request_user_input_async` / `functions.send_message_to_user_async`, waiting windows, mid-task steering, compaction continuity, plus a `final` fallback when async question tools are unavailable |
+| **Formatting & Visuals** | GitHub-flavored Markdown, CommonMark blank-line spacing, clickable local file links (angle brackets for spaces, no backticks or URIs, no line ranges), four-tier visualization selection (interactive/inline, standalone plots, Mermaid, tables/lists) |
+| **Tools & Shell** | `rg` / `rg --files`, batched read-only `functions.exec` via `await Promise.allSettled([...])`, no decorative separators, `JSON.stringify()` non-shell-escaping warning, `gh --body-file` newline/escape fidelity, 60-second blocking wait/poll cap, never repurposing `$HOME`/`$home`/`$CODEX_HOME` |
+| **Extensions & Frontend** | Skills (`r0` alias expansion, environment-owned and orchestrator `skills.list` / `skills.read` / `skill://`), Apps (`codex_apps` / `tool_search` / never calling `list_mcp_resources*`), Plugins (`plugin_name:` and MCP `provenance`), frontend visuals/copy restraint/interactive states & accessibility, and the full 65-font catalog |
 
 </details>
 
+---
+
 ## How to Use
 
-### Standard Setup: `AGENTS.en.md` (Recommended for Everyone)
+### <kbd>Step 1</kbd> Set up `AGENTS.en.md` (Recommended for Everyone)
 
-1. Open [AGENTS.en.md](./AGENTS.en.md) and trim or adjust any clauses to match your workflow (such as circuit-breaker limits or Dual-Plan usage).
-2. Place it at `~/.codex/AGENTS.md` for global use, or at your repository root as `AGENTS.md` (merge into an existing file while keeping project build/test commands). [Official AGENTS.md guide](https://developers.openai.com/codex/guides/agents-md)
+1. Open [AGENTS.en.md](./AGENTS.en.md) and trim or adjust any clauses to match your style (such as circuit-breaker counts or Dual-Plan usage).
+2. Put it at `~/.codex/AGENTS.md` for global use, or at your repository root as `AGENTS.md` (merge into existing files while keeping project build/test commands). See the [official Codex AGENTS.md guide](https://developers.openai.com/codex/guides/agents-md).
 
-### Advanced Setup: Replace Base Instructions (Optional)
+### <kbd>Step 2</kbd> Replace Base Instructions (Optional / Advanced)
 
-1. Copy [base_instructions.v2.md](./base_instructions.v2.md) into your Codex config directory, e.g. `~/.codex/base_instructions.v2.md`.
-2. Point `model_instructions_file` to it in `~/.codex/config.toml` (relative paths resolve from the `.codex/` directory containing `config.toml`; the older `experimental_instructions_file` key is deprecated):
+1. Copy [base_instructions.v2.md](./base_instructions.v2.md) to `~/.codex/base_instructions.v2.md`.
+2. Enable `model_instructions_file` in `~/.codex/config.toml`:
 
 ```toml
+# Relative paths resolve from the .codex/ directory containing config.toml
+# The older experimental_instructions_file key is deprecated
 model_instructions_file = "base_instructions.v2.md"
 ```
 
-3. Start a new Codex session and test it on a small real task (such as fixing a form message or small bug) to see how it locates call sites, keeps diffs tight, runs checks, and reports results.
+3. Start a new Codex session and try a small real task (such as fixing a form message or small bug) to verify that it locates real call sites, keeps diffs tight, runs checks, and reports clearly.
 
-## Version and Compatibility Notice
+---
 
-`base_instructions.v2.md` is aligned with Codex tool and channel contracts as of November 2026 (tested with `codex-cli 0.172.0`). Because `model_instructions_file` replaces the entire built-in base prompt, **future Codex upgrades that change built-in tool names, Skills/Apps protocols, or client formatting rules may break older overrides**. After major Codex updates, review the tool contract sections against the latest built-in instructions before continuing to use an override.
+## Version & Compatibility
+
+> [!WARNING]
+> `base_instructions.v2.md` is aligned with Codex tool and channel contracts as of November 2026 (tested on `codex-cli 0.172.0`). Because `model_instructions_file` replaces the entire built-in base prompt, future major Codex upgrades that change built-in tool names or Skills/Apps protocols may break older overrides. Review the tool contract sections against the latest built-in instructions after major updates.
