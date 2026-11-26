@@ -2,6 +2,8 @@
 
 # What Your Codex Needs
 
+[English (README.en.md)](./README.en.md)　·　[English AGENTS.en.md](./AGENTS.en.md)
+
 我希望 Codex 像一名靠谱的工程同事：一个按钮文案写错了，直接找准调用点改好并验证；公共接口要变，先查清影响面等我拍板；同一个报错卡住，换思路查根因，真推进不了再带着关键日志停下来；日常问它看法，先给结论和理由，不打官腔也不拍电报。
 
 这个仓库整理了一套**两层配合的 Codex 配置**：日常可直接放进 `~/.codex/AGENTS.md` 的协作规则，以及面向进阶用户的底层系统提示词重构版 `base_instructions.v2`。
